@@ -3,11 +3,26 @@ getAirportArrivals <- function(airport, startTime, endTime, timeZone=Sys.timezon
   checkAirport(airport)
   checkTime(startTime)
   checkTime(endTime)
-  response <- GET(paste(openskyApiRootURL, "flights/arrival", sep="" ),
-                  query=list(airport=airport,
-                             begin=stringToEpochs(startTime, timeZone),
-                             end=stringToEpochs(endTime, timeZone)),
-                  if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+  jsonResponse <- FALSE
+  attemptCount <- 0
+  while(!jsonResponse) {
+    response <- GET(paste(openskyApiRootURL, "flights/arrival", sep="" ),
+                    query=list(airport=airport,
+                               begin=stringToEpochs(startTime, timeZone),
+                               end=stringToEpochs(endTime, timeZone)),
+                    if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    jsonResponse <- grepl("json", headers(response)$`content-type`)
+    if(attemptCount > 100) {
+      message(strwrap("Ressource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
+  }
+  if(status_code(response) != 200) {
+    message(strwrap("No arrivals found for the specified interval and 
+                    airport.", initial="", prefix="\n"))
+    return(NULL)
+  }
   arrivalsList <- formatFlightsListResponse(content(response))
   return(arrivalsList)
 }
@@ -18,11 +33,26 @@ getAirportDepartures <- function(airport, startTime, endTime, timeZone=Sys.timez
   checkAirport(airport)
   checkTime(startTime)
   checkTime(endTime)
-  response <- GET(paste(openskyApiRootURL, "flights/departure", sep="" ),
-                  query=list(airport=airport,
-                             begin=stringToEpochs(startTime, timeZone),
-                             end=stringToEpochs(endTime, timeZone)),
-                  if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+  jsonResponse <- FALSE
+  attemptCount <- 0
+  while(!jsonResponse) {
+    response <- GET(paste(openskyApiRootURL, "flights/departure", sep="" ),
+                    query=list(airport=airport,
+                              begin=stringToEpochs(startTime, timeZone),
+                               end=stringToEpochs(endTime, timeZone)),
+                    if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    jsonResponse <- grepl("json", headers(response)$`content-type`)
+    if(attemptCount > 100) {
+      message(strwrap("Ressource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
+  }
+  if(status_code(response) != 200) {
+    message(strwrap("No departures found for the specified interval and 
+                    airport.", initial="", prefix="\n"))
+    return(NULL)
+  }
   departuresList <- formatFlightsListResponse(content(response))
   return(departuresList)
 }
@@ -32,11 +62,26 @@ getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezo
   checkICAO24(aircraft)
   checkTime(startTime)
   checkTime(endTime)
-  response <- GET(paste(openskyApiRootURL, "flights/aircraft", sep="" ),
-                  query=list(icao24=aircraft,
-                             begin=stringToEpochs(startTime, timeZone),
-                             end=stringToEpochs(endTime, timeZone)),
-                  if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+  jsonResponse <- FALSE
+  attemptCount <- 0
+  while(!jsonResponse) {
+    response <- GET(paste(openskyApiRootURL, "flights/aircraft", sep="" ),
+                    query=list(icao24=aircraft,
+                                 begin=stringToEpochs(startTime, timeZone),
+                                 end=stringToEpochs(endTime, timeZone)),
+                    if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    jsonResponse <- grepl("json", headers(response)$`content-type`)
+    if(attemptCount > 100) {
+      message(strwrap("Ressource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
+  }
+  if(status_code(response) != 200) {
+    message(strwrap("No flights found for the specified interval and 
+                    aircraft", initial="", prefix="\n"))
+    return(NULL)
+  } 
   flightsList <- formatFlightsListResponse(content(response))
   return(flightsList)
 }
@@ -45,10 +90,24 @@ getIntervalFlights <- function(startTime, endTime, timeZone=Sys.timezone(),
                                username=NULL, password=NULL) {
   checkTime(startTime)
   checkTime(endTime)
-  response <- GET(paste(openskyApiRootURL, "flights/all", sep="" ),
-                  query=list(begin=stringToEpochs(startTime, timeZone),
-                             end=stringToEpochs(endTime, timeZone)),
-                  if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+  jsonResponse <- FALSE
+  attemptCount <- 0
+  while(!jsonResponse) {
+    response <- GET(paste(openskyApiRootURL, "flights/all", sep="" ),
+                    query=list(begin=stringToEpochs(startTime, timeZone),
+                               end=stringToEpochs(endTime, timeZone)),
+                    if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    jsonResponse <- grepl("json", headers(response)$`content-type`)
+    if(attemptCount > 100) {
+      message(strwrap("Ressource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
+  }
+  if(status_code(response) != 200) {
+    message("No flights found for the specified interval")
+    return(NULL)
+  } 
   flightsList <- formatFlightsListResponse(content(response))
   return(flightsList)
 }
@@ -103,9 +162,24 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
                        lamin=minLatitude, lomin=minLongitude,
                        lamax=maxLatitude, lomax=maxLongitude)
   queryParameters <- as.list(queryParameters[lengths(queryParameters) != 0])
-  response <- GET(paste(openskyApiRootURL, "states/all", sep="" ),
-                  query=queryParameters,
-                  if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+  jsonResponse <- FALSE
+  attemptCount <- 0
+  while(!jsonResponse) {
+    response <- GET(paste(openskyApiRootURL, "states/all", sep="" ),
+                    query=queryParameters,
+                    if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    jsonResponse <- grepl("json", headers(response)$`content-type`)
+    if(attemptCount > 100) {
+      message(strwrap("Ressource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
+  }
+  if(status_code(response) != 200) {
+    message(strwrap("No state vectors found for the specified aircrafts, 
+                     location and interval."), initial="", prefix="\n")
+    return(NULL)
+  } 
   formattedStateVectors <- formatStateVectorsResponse(content(response))
   if(length(formattedStateVectors)==1) formattedStateVectors <- unlist(formattedStateVectors, recursive=FALSE)
   return(formattedStateVectors)
@@ -129,10 +203,26 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
   timePoints <- generateTimePoints(startTime, endTime, timeZone, timeResolution)
   stateVectorsSeries <- vector(mode="list", length=length(timePoints))
   for(i in seq_len(length(timePoints))) {
-    response <- GET(paste(openskyApiRootURL, "states/all", sep="" ),
-                    query=list(icao24=aircraft,
-                               time=timePoints[i]),
-                    if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    jsonResponse <- FALSE
+    attemptCount <- 0
+    while(!jsonResponse) {
+      response <- GET(paste(openskyApiRootURL, "states/all", sep="" ),
+                      query=list(icao24=aircraft,
+                                 time=timePoints[i]),
+                      if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+      jsonResponse <- grepl("json", headers(response)$`content-type`)
+      if(attemptCount > 100) {
+        message(strwrap("Ressource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+        return(NULL)
+      }
+    }
+    if(status_code(response) != 200) {
+      message(strwrap("No state vectors found for part of the specified 
+                       interval."), initial="", prefix="\n")
+      stateVectorsSeries[[i]] <- NULL
+      next
+    }
     stateVectorsSeries[[i]] <- unlist(formatStateVectorsResponse(content(response)), recursive=FALSE)
   }
   return(stateVectorsSeries)

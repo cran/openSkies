@@ -1,3 +1,7 @@
+Changes in version 0.99.4 (2020-11-11)
++ Added additional checks to results of queries
++ Added informative messages to failed requests
+
 Changes in version 0.99.3 (2020-10-24)
 + Added link to OpenSky website in DESCRIPTION
 
