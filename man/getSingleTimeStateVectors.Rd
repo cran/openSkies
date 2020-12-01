@@ -130,12 +130,16 @@ https://opensky-network.org/apidoc/rest.html
 # Obtain a list with the state vectors for all aircrafts currently flying over
 # an area covering Switzerland.
 
+if(interactive()) {
 getSingleTimeStateVectors(minLatitude=45.8389, maxLatitude=47.8229, 
 minLongitude=5.9962, maxLongitude=10.5226)
+}
 
 # Obtain the state vector for aircraft with ICAO 24-bit address 403003 for
 # the 8th of October, 2020 at 16:50 London time.
 
+if(interactive()) {
 getSingleTimeStateVectors(aircraft="403003", time="2020-10-08 16:50:00", 
 timeZone="Europe/London")
+}
 }

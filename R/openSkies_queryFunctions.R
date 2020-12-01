@@ -6,14 +6,24 @@ getAirportArrivals <- function(airport, startTime, endTime, timeZone=Sys.timezon
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
-    response <- GET(paste(openskyApiRootURL, "flights/arrival", sep="" ),
-                    query=list(airport=airport,
-                               begin=stringToEpochs(startTime, timeZone),
-                               end=stringToEpochs(endTime, timeZone)),
-                    if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    response <- tryCatch({
+      GET(paste(openskyApiRootURL, "flights/arrival", sep="" ),
+          query=list(airport=airport,
+                     begin=stringToEpochs(startTime, timeZone),
+                     end=stringToEpochs(endTime, timeZone)),
+          timeout(300),
+          if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    }, 
+      error = function(e) e
+    )
+    if(inherits(response, "error")) {
+      message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount > 100) {
-      message(strwrap("Ressource not currently available. Please try again 
+    if(attemptCount > 10) {
+      message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)
     }
@@ -36,14 +46,24 @@ getAirportDepartures <- function(airport, startTime, endTime, timeZone=Sys.timez
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
-    response <- GET(paste(openskyApiRootURL, "flights/departure", sep="" ),
-                    query=list(airport=airport,
-                              begin=stringToEpochs(startTime, timeZone),
-                               end=stringToEpochs(endTime, timeZone)),
-                    if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    response <- tryCatch({
+      GET(paste(openskyApiRootURL, "flights/departure", sep="" ),
+          query=list(airport=airport,
+                     begin=stringToEpochs(startTime, timeZone),
+                     end=stringToEpochs(endTime, timeZone)),
+          timeout(300),
+          if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    },
+    error = function(e) e
+    )
+    if(inherits(response, "error")) {
+      message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount > 100) {
-      message(strwrap("Ressource not currently available. Please try again 
+    if(attemptCount > 10) {
+      message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)
     }
@@ -65,13 +85,23 @@ getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezo
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
-    response <- GET(paste(openskyApiRootURL, "flights/aircraft", sep="" ),
-                    query=list(icao24=aircraft,
-                                 begin=stringToEpochs(startTime, timeZone),
-                                 end=stringToEpochs(endTime, timeZone)),
-                    if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    response <- tryCatch({
+      GET(paste(openskyApiRootURL, "flights/aircraft", sep="" ),
+          query=list(icao24=aircraft,
+                     begin=stringToEpochs(startTime, timeZone),
+                     end=stringToEpochs(endTime, timeZone)),
+          timeout(300),
+          if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    },
+    error = function(e) e
+    )
+    if(inherits(response, "error")) {
+      message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount > 100) {
+    if(attemptCount > 10) {
       message(strwrap("Ressource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)
@@ -93,12 +123,22 @@ getIntervalFlights <- function(startTime, endTime, timeZone=Sys.timezone(),
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
-    response <- GET(paste(openskyApiRootURL, "flights/all", sep="" ),
-                    query=list(begin=stringToEpochs(startTime, timeZone),
-                               end=stringToEpochs(endTime, timeZone)),
-                    if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    response <- tryCatch({
+      GET(paste(openskyApiRootURL, "flights/all", sep="" ),
+          query=list(begin=stringToEpochs(startTime, timeZone),
+                     end=stringToEpochs(endTime, timeZone)),
+          timeout(300),
+          if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    },
+    error = function(e) e
+    )
+    if(inherits(response, "error")) {
+      message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount > 100) {
+    if(attemptCount > 10) {
       message(strwrap("Ressource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)
@@ -165,12 +205,22 @@ getSingleTimeStateVectors <- function(aircraft=NULL, time=NULL, timeZone=Sys.tim
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
-    response <- GET(paste(openskyApiRootURL, "states/all", sep="" ),
-                    query=queryParameters,
-                    if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    response <- tryCatch({
+      GET(paste(openskyApiRootURL, "states/all", sep="" ),
+          query=queryParameters,
+          timeout(300),
+          if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+    },
+    error = function(e) e
+    )
+    if(inherits(response, "error")) {
+      message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+      return(NULL)
+    }
     jsonResponse <- grepl("json", headers(response)$`content-type`)
-    if(attemptCount > 100) {
-      message(strwrap("Ressource not currently available. Please try again 
+    if(attemptCount > 10) {
+      message(strwrap("Resource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
       return(NULL)
     }
@@ -206,12 +256,22 @@ getAircraftStateVectorsSeries <- function(aircraft, startTime, endTime, timeZone
     jsonResponse <- FALSE
     attemptCount <- 0
     while(!jsonResponse) {
-      response <- GET(paste(openskyApiRootURL, "states/all", sep="" ),
-                      query=list(icao24=aircraft,
-                                 time=timePoints[i]),
-                      if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+      response <- tryCatch({
+        GET(paste(openskyApiRootURL, "states/all", sep="" ),
+            query=list(icao24=aircraft,
+                       time=timePoints[i]),
+            timeout(300),
+            if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+      },
+      error = function(e) e
+      )
+      if(inherits(response, "error")) {
+        message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+        return(NULL)
+      }
       jsonResponse <- grepl("json", headers(response)$`content-type`)
-      if(attemptCount > 100) {
+      if(attemptCount > 10) {
         message(strwrap("Ressource not currently available. Please try again 
                        later.", initial="", prefix="\n"))
         return(NULL)

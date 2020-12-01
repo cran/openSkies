@@ -1,3 +1,6 @@
+Changes in version 0.99.6 (2020-11-28)
++ Requests will now timeout after 5 minutes
+
 Changes in version 0.99.4 (2020-11-11)
 + Added additional checks to results of queries
 + Added informative messages to failed requests
