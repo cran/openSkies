@@ -1,4 +1,4 @@
-92875a055ae49880c59d721d408d36e2 *DESCRIPTION
+edf5da41e4d1c8f92d5f698f39fac075 *DESCRIPTION
 e13f801c94c57f46efcc3e9343f644bb *NAMESPACE
 a0c5046edab453d841aed1caf783342f *NEWS
 d0ceb28f7e775d4081f8107ae399483c *R/openSkies_checkInputFunctions.R
@@ -8,8 +8,8 @@ a71b3afab224d5925ffbbce7aab040dc *R/openSkies_variableDefinitions.R
 ed586cbedba505071deebf45e0390d39 *build/vignette.rds
 6596f85ebc092a81fada991004027af4 *inst/doc/openSkies.R
 f8efc74a6042a3409c2e3ca0affcb786 *inst/doc/openSkies.Rmd
-da930b76a3ca21cc43ae8d60f8371346 *inst/doc/openSkies.html
-291a5c25a2937e65d7f5d4f9ac61b572 *inst/unitTests/test_all.R
+d9561d5aa46258a9d153967d8df05284 *inst/doc/openSkies.html
+7385052987dd99b03e783740d7195d99 *inst/unitTests/test_all.R
 0b2866ec16763853f685bb6894c3afab *man/getAircraftFlights.Rd
 3960af25484c41ba14bc33c6cfa5f9c1 *man/getAircraftStateVectorsSeries.Rd
 7f272a0b41dbe2eb00044778961d0863 *man/getAirportArrivals.Rd

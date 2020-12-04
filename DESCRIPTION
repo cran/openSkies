@@ -1,8 +1,8 @@
 Package: openSkies
 Type: Package
 Title: An R Client-Side Interface to the 'OpenSky' API
-Version: 0.99.7
-Date: 2020-12-01
+Version: 0.99.8
+Date: 2020-12-03
 Author: Rafael Ayala, Daniel Ayala, Aleix Sellés, Lara Sellés Vidal
 Maintainer: Rafael Ayala <r.ayala14@imperial.ac.uk>
 Description: Provides a client interface to the 'OpenSky' API <https://opensky-network.org>. It allows retrieval
@@ -14,5 +14,5 @@ VignetteBuilder: knitr
 NeedsCompilation: no
 Encoding: UTF-8
 Repository: CRAN
-Packaged: 2020-12-01 14:07:51 UTC; ra3014
-Date/Publication: 2020-12-01 14:40:02 UTC
+Packaged: 2020-12-03 20:40:05 UTC; ra3014
+Date/Publication: 2020-12-04 16:30:02 UTC
