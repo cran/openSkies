@@ -35,41 +35,24 @@ getIntervalFlights(startTime, endTime, timeZone=Sys.timezone(), username=NULL,
   }
 }
 \value{
-A nested list where each element of the top-level list represents a flight that
-was registered during the specified time interval. Each of the top-level list 
-elements is a list in itself, containing the following elements that provide 
-information about the flight:
-  \item{ICAO24 }{ICAO 24-bit aicraft address associated to the aircraft that
-  performed the flight in hexadecimal format
-  }
-  \item{callSign }{Call sign assigned to the aircraft. Can be NULL if no call
-  sign is received. If the aircraft transmitted multiple call signs during the
-  flight, the most frequent is returned
-  }
-  \item{departureAirport }{ICAO code of the airport from which the aicraft
-  departed. Can be NULL if the airport could not be identified
-  }
-  \item{arrivalAirport }{ICAO code of the airport at which the aicraft arrived.
-  Can be NULL if the airport could not be identified
-  }
-  \item{departureTime }{Estimated time of departure for the flight
-  }
-  \item{arrivalTime }{Estimated time of arrival for the flight
-  }
+A list of objects of class \code{\link{openSkiesFlight}}, where each object
+represents a flight that was registered during the specified time interval. See 
+the \code{\link{openSkiesFlight}} documentation for details on the fields for 
+the class.
 }
 \references{
 https://opensky-network.org/apidoc/rest.html
 }
 \examples{
 # Obtain a list with information for all the flights registered during the 16th
-# of November, 2019 between 9 AM and 9.30 AM, London time.
+# of November, 2019 between 9 AM and 10 AM, London time.
 
-if(interactive()) {
 flights <- getIntervalFlights(startTime="2019-11-16 09:00:00", 
-endTime="2019-11-16 09:30:00", timeZone="Europe/London")
+endTime="2019-11-16 10:00:00", timeZone="Europe/London")
 
 # Count the number of registered flights.
 
+if(interactive()){
 length(flights)
 }
 }

@@ -18,6 +18,8 @@ getSingleTimeStateVectorsTest <- getSingleTimeStateVectors(aircraft="403003",
                                                            time="2020-10-08 16:50:00", 
                                                            timeZone="Europe/London")
 
+getAircraftMetadataTest <- getAircraftMetadata("3922e2")
+
 ## Test getAirportArrivals
 
 checkTrue(length(getAirportArrivalsTest) == 24 | is.null(getAirportArrivalsTest))
@@ -28,7 +30,7 @@ checkTrue(length(getAirportDeparturesTest) == 35 | is.null(getAirportDeparturesT
 
 ## Test getAircraftFlights
 
-checkTrue(identical(getAircraftFlightsTest[[5]]$arrivalAirport, "LEZL") | is.null(getAircraftFlightsTest))
+checkTrue(identical(getAircraftFlightsTest[[5]]$destination_airport, "LEZL") | is.null(getAircraftFlightsTest))
 
 ## Test getIntervalFlights
 
@@ -37,3 +39,7 @@ checkTrue(length(getIntervalFlightsTest) == 514 | is.null(getIntervalFlightsTest
 ## Test getSingleTimeStateVectors
 
 checkTrue(identical(getSingleTimeStateVectorsTest$velocity, 30.26) | is.null(getSingleTimeStateVectorsTest))
+
+## Test getAircraftMetadata
+
+checkTrue(identical(getAircraftMetadataTest$ICAO24, "3922e2") | is.null(getAircraftMetadataTest))

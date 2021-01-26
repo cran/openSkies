@@ -1,37 +1,3 @@
-formatFlightsListResponse <- function(responseList) {
-  formattedList <- lapply(responseList, function(flight) list("ICAO24"=flight$icao24,
-                                                              "callSign"=trimws(flight$callsign),
-                                                              "departureAirport"=flight$estDepartureAirport,
-                                                              "arrivalAirport"=flight$estArrivalAirport,
-                                                              "departureTime"=as.POSIXct(flight$firstSeen, origin="1970-01-01"),
-                                                              "arrivalTime"=as.POSIXct(flight$lastSeen, origin="1970-01-01")))
-}
-
-formatStateVectorsResponse <- function(responseList) {
-  formattedList <- lapply(responseList$states, function(stateVector) list("ICAO24"=stateVector[[1]],
-                                                                          "callSign"=trimws(stateVector[[2]]),
-                                                                          "originCountry"=stateVector[[3]],
-                                                                          "requestedTime"=as.POSIXct(responseList$time, origin="1970-01-01"),
-                                                                          "lastPositionUpdateTime"=if(!is.null(stateVector[[4]])) as.POSIXct(stateVector[[4]], origin="1970-01-01") else NULL,
-                                                                          "lastAnyUpdateTime"=if(!is.null(stateVector[[5]])) as.POSIXct(stateVector[[5]], origin="1970-01-01") else NULL,
-                                                                          "longitude"=stateVector[[6]],
-                                                                          "latitude"=stateVector[[7]],
-                                                                          "baroAltitude"=stateVector[[8]],
-                                                                          "geoAltitude"=stateVector[[14]],
-                                                                          "onGround"=stateVector[[9]],
-                                                                          "velocity"=stateVector[[10]],
-                                                                          "trueTrack"=stateVector[[11]],
-                                                                          "verticalRate"=stateVector[[12]],
-                                                                          "squawk"=stateVector[[15]],
-                                                                          "specialPurposeIndicator"=stateVector[[16]],
-                                                                          "positionSource"=switch(as.integer(stateVector[[17]]) + 1,
-                                                                                                  "ADS-B",
-                                                                                                  "ASTERIX",
-                                                                                                  "MLAT"
-                                                                          )))
-  return(formattedList)
-}
-
 stringToEpochs <- function(dateTimeString, timeZone) {
   return(as.integer(as.POSIXct(dateTimeString, tz=timeZone, origin="1970-01-01")))
 }
@@ -54,4 +20,106 @@ generateTimePoints <- function(startTime, endTime, timeZone, timeResolution) {
   startTimeEpochs <- stringToEpochs(startTime, timeZone)
   endTimeEpochs <- stringToEpochs(endTime, timeZone)
   return(seq(startTimeEpochs, endTimeEpochs, by=timeResolution))
+}
+
+getMapLimits <- function(longitudes, latitudes, paddingFactor) {
+  minLon <- min(na.omit(unlist(longitudes)))
+  maxLon <- max(na.omit(unlist(longitudes)))
+  minLat <- min(na.omit(unlist(latitudes)))
+  maxLat <- max(na.omit(unlist(latitudes)))
+  width <- maxLon - minLon
+  height <- maxLat - minLat
+  mapLimits <- c(
+    left = minLon - width * paddingFactor,
+    right = maxLon + width * paddingFactor,
+    top = maxLat + height * paddingFactor,
+    bottom = minLat - height * paddingFactor
+  )
+  return(mapLimits)
+}
+
+listToOpenSkiesFlight <- function(flightDataList) {
+  openSkiesFlightObject <- openSkiesFlight$new(
+    ICAO24 = flightDataList$ICAO24,
+    call_sign = flightDataList$callSign,
+    origin_airport = flightDataList$departureAirport,
+    destination_airport = flightDataList$arrivalAirport,
+    departure_time = flightDataList$departureTime,
+    arrival_time = flightDataList$arrivalTime
+  )
+}
+
+listToOpenSkiesStateVector <- function(stateVectorList) {
+  openSkiesStateVectorObject <- openSkiesStateVector$new(
+    ICAO24 = stateVectorList$ICAO24, 
+    call_sign= stateVectorList$callSign, 
+    origin_country = stateVectorList$originCountry, 
+    requested_time = stateVectorList$requestedTime,
+    last_position_update_time = stateVectorList$lastPositionUpdateTime, 
+    last_any_update_time = stateVectorList$lastAnyUpdateTime,
+    longitude = stateVectorList$longitude, 
+    latitude = stateVectorList$latitude, 
+    baro_altitude = stateVectorList$baroAltitude,
+    geo_altitude = stateVectorList$geoAltitude,
+    on_ground = stateVectorList$onGround, 
+    velocity = stateVectorList$velocity, 
+    true_track = stateVectorList$trueTrack, 
+    vertical_rate = stateVectorList$verticalRate,
+    squawk = stateVectorList$squawk, 
+    special_purpose_indicator = stateVectorList$specialPurposeIndicator, 
+    position_source = stateVectorList$positionSource
+  )
+}
+
+unwrapAngles <- function(angles, usingRadians=FALSE) {
+  newAngles = c(angles[0])
+  loops = 0
+  if(usingRadians){
+    threshold = pi
+    halfValue = pi
+  } else {
+    threshold = 180
+    halfValue = 180
+  }
+  angles = angles %% (2 * halfValue)
+  for (i in 2:length(angles)){
+    angle1 = angles[i-1]
+    angle2 = angles[i]
+    diff = angle2 - angle1
+    # Counter-clockwise loop
+    if(angle1>halfValue && angle2<halfValue && diff <= -threshold){
+      loops = loops + 1
+      # Clockwise loop
+    } else if(angle2>halfValue && angle1<halfValue && diff >= threshold){
+      loops = loops - 1
+    }
+    newAngle = angle2 + loops * (2*halfValue)
+    newAngles = c(newAngles, newAngle)
+  }
+  return(newAngles)
+}
+
+groupByFunction <- function(elements, groupingFunction, includeNull=FALSE, nullKeyName="unclassified"){
+  groups <- list()
+  for(element in elements){
+    key <- groupingFunction(element)
+    if(is.null(key)){
+      if(includeNull) {
+        key <- nullKeyName  
+      } else {
+        next
+      }
+    }
+    key <- as.character(key)
+    if(is.null(groups[[key]])){
+      groups[[key]] <- list()
+    }
+    groups[[key]][[length(groups[[key]])+1]] <- element
+  }
+  return(groups)
+}
+
+generateEnclosingAirspace <- function(elements, groupingFunction){
+  
+  
 }
