@@ -10,7 +10,9 @@ YYYY-MM-DD HH:MM:SS).
 }
 \usage{
 getIntervalFlights(startTime, endTime, timeZone=Sys.timezone(), username=NULL, 
-                   password=NULL)
+                   password=NULL, includeStateVectors=FALSE, 
+                   timeResolution=NULL, useImpalaShell=FALSE, 
+                   includeAirportsMetadata=FALSE)
 }
 \arguments{
   \item{startTime}{date-time string indicating the starting time of the interval 
@@ -33,6 +35,22 @@ getIntervalFlights(startTime, endTime, timeZone=Sys.timezone(), username=NULL,
   \item{password}{optional string with the password to use for authentication
   for the OpenSky API. By default, no authentication is performed.
   }
+  \item{includeStateVectors}{logical indicating if the set of state vectors for
+  each flight should also be retrieved. By default, state vectors are not
+  retrieved.
+  }
+  \item{timeResolution}{time resolution in seconds with which state vectors
+  should be retrieved if \code{includeStateVectors=TRUE}.
+  }
+  \item{useImpalaShell}{logical indicating whether or not to use the OpenSky
+  impala shell instead of the API to retrieve state vectors if \code{includeStateVectors=TRUE}. If used, the provided 
+  username and password are used for the ssh connection. By default, the impala shell
+  is not used.
+  }
+  \item{includeAirportsMetadata}{logical indicating if the data about the origin and destination
+  airports of each flight should also be retrieved. If not, only the ICAO24 code of the airports will be
+  included.
+  }
 }
 \value{
 A list of objects of class \code{\link{openSkiesFlight}}, where each object
@@ -47,12 +65,12 @@ https://opensky-network.org/apidoc/rest.html
 # Obtain a list with information for all the flights registered during the 16th
 # of November, 2019 between 9 AM and 10 AM, London time.
 
+if(interactive()){
 flights <- getIntervalFlights(startTime="2019-11-16 09:00:00", 
 endTime="2019-11-16 10:00:00", timeZone="Europe/London")
 
 # Count the number of registered flights.
 
-if(interactive()){
 length(flights)
 }
 }

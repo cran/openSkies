@@ -10,7 +10,9 @@ that can be unambiguously converted to POSIXct (such as YYYY-MM-DD HH:MM:SS).
 }
 \usage{
 getAirportArrivals(airport, startTime, endTime, timeZone=Sys.timezone(), 
-                   username=NULL, password=NULL)
+                   username=NULL, password=NULL, includeStateVectors=FALSE, 
+                   timeResolution=NULL, useImpalaShell=FALSE, 
+                   includeAirportsMetadata=FALSE)
 }
 \arguments{
   \item{airport}{string with the ICAO identifier of an airport (for example,
@@ -35,6 +37,22 @@ getAirportArrivals(airport, startTime, endTime, timeZone=Sys.timezone(),
   }
   \item{password}{optional string with the password to use for authentication
   for the OpenSky API. By default, no authentication is performed.
+  }
+  \item{includeStateVectors}{logical indicating if the set of state vectors for
+  each flight should also be retrieved. By default, state vectors are not
+  retrieved.
+  }
+  \item{timeResolution}{time resolution in seconds with which state vectors
+  should be retrieved if \code{includeStateVectors=TRUE}.
+  }
+  \item{useImpalaShell}{logical indicating whether or not to use the OpenSky
+  impala shell instead of the API to retrieve state vectors if \code{includeStateVectors=TRUE}. If used, the provided 
+  username and password are used for the ssh connection. By default, the impala shell
+  is not used.
+  }
+  \item{includeAirportsMetadata}{logical indicating if the data about the origin and destination
+  airports of each flight should also be retrieved. If not, only the ICAO24 code of the airports will be
+  included.
   }
 }
 \value{

@@ -1,8 +1,12 @@
 getAirportArrivals <- function(airport, startTime, endTime, timeZone=Sys.timezone(),
-                               username=NULL, password=NULL) {
+                               username=NULL, password=NULL, includeStateVectors=FALSE, 
+                               timeResolution=NULL, useImpalaShell=FALSE, includeAirportsMetadata=FALSE) {
   checkAirport(airport)
   checkTime(startTime)
   checkTime(endTime)
+  if(includeStateVectors && is.null(timeResolution)){
+    stop("Time resolution must be provided when requesting state vectors.")
+  }
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
@@ -35,15 +39,41 @@ getAirportArrivals <- function(airport, startTime, endTime, timeZone=Sys.timezon
   }
   arrivalsList <- formatFlightsListResponse(content(response))
   arrivalsOpenSkiesFlights <- lapply(arrivalsList, listToOpenSkiesFlight)
+  if(includeStateVectors){
+    for(i in 1:length(arrivalsOpenSkiesFlights)){
+      departureTime <- arrivalsOpenSkiesFlights[[i]]$departure_time
+      arrivalTime <- arrivalsOpenSkiesFlights[[i]]$arrival_time
+      stateVectors <- getAircraftStateVectorsSeries(arrivalsOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useImpalaShell)
+      arrivalsOpenSkiesFlights[[i]]$state_vectors <- stateVectors
+    }
+  }
+  if(includeAirportsMetadata){
+    for(i in 1:length(arrivalsOpenSkiesFlights)){
+      originAirportICAO <- arrivalsOpenSkiesFlights[[i]]$origin_airport
+      destinationAirportICAO <- arrivalsOpenSkiesFlights[[i]]$destination_airport
+      if(!is.null(originAirportICAO)){
+        originAirport <- getAirportMetadata(originAirportICAO)
+        arrivalsOpenSkiesFlights[[i]]$origin_airport <- originAirport
+      }
+      if(!is.null(destinationAirportICAO)){
+        destinationAirport <- getAirportMetadata(destinationAirportICAO)
+        arrivalsOpenSkiesFlights[[i]]$destination_airport <- destinationAirport
+      }
+    }
+  }
   return(arrivalsOpenSkiesFlights)
 }
 
 
 getAirportDepartures <- function(airport, startTime, endTime, timeZone=Sys.timezone(),
-                                 username=NULL, password=NULL) {
+                                 username=NULL, password=NULL, includeStateVectors=FALSE, 
+                                 timeResolution=NULL, useImpalaShell=FALSE, includeAirportsMetadata=FALSE) {
   checkAirport(airport)
   checkTime(startTime)
   checkTime(endTime)
+  if(includeStateVectors && is.null(timeResolution)){
+    stop("Time resolution must be provided when requesting state vectors.")
+  }
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
@@ -76,12 +106,34 @@ getAirportDepartures <- function(airport, startTime, endTime, timeZone=Sys.timez
   }
   departuresList <- formatFlightsListResponse(content(response))
   departuresOpenSkiesFlights <- lapply(departuresList, listToOpenSkiesFlight)
+  if(includeStateVectors){
+    for(i in 1:length(departuresOpenSkiesFlights)){
+      departureTime <- departuresOpenSkiesFlights[[i]]$departure_time
+      arrivalTime <- departuresOpenSkiesFlights[[i]]$arrival_time
+      stateVectors <- getAircraftStateVectorsSeries(departuresOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useImpalaShell)
+      departuresOpenSkiesFlights[[i]]$state_vectors <- stateVectors
+    }
+  }
+  if(includeAirportsMetadata){
+    for(i in 1:length(departuresOpenSkiesFlights)){
+      originAirportICAO <- departuresOpenSkiesFlights[[i]]$origin_airport
+      destinationAirportICAO <- departuresOpenSkiesFlights[[i]]$destination_airport
+      if(!is.null(originAirportICAO)){
+        originAirport <- getAirportMetadata(originAirportICAO)
+        departuresOpenSkiesFlights[[i]]$origin_airport <- originAirport
+      }
+      if(!is.null(destinationAirportICAO)){
+        destinationAirport <- getAirportMetadata(destinationAirportICAO)
+        departuresOpenSkiesFlights[[i]]$destination_airport <- destinationAirport
+      }
+    }
+  }
   return(departuresOpenSkiesFlights)
 }
 
 getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezone(),
                                username=NULL, password=NULL, includeStateVectors=FALSE, 
-                               timeResolution=NULL) {
+                               timeResolution=NULL, useImpalaShell=FALSE, includeAirportsMetadata=FALSE) {
   checkICAO24(aircraft)
   checkTime(startTime)
   checkTime(endTime)
@@ -124,16 +176,34 @@ getAircraftFlights <- function(aircraft, startTime, endTime, timeZone=Sys.timezo
   for(i in 1:length(aircraftOpenSkiesFlights)){
     departureTime <- aircraftOpenSkiesFlights[[i]]$departure_time
     arrivalTime <- aircraftOpenSkiesFlights[[i]]$arrival_time
-    stateVectors <- getAircraftStateVectorsSeries(aircraft, departureTime, arrivalTime, timeZone, timeResolution, username, password)
+    stateVectors <- getAircraftStateVectorsSeries(aircraft, departureTime, arrivalTime, timeZone, timeResolution, username, password, useImpalaShell)
     aircraftOpenSkiesFlights[[i]]$state_vectors <- stateVectors
+  }
+  if(includeAirportsMetadata){
+    for(i in 1:length(aircraftOpenSkiesFlights)){
+      originAirportICAO <- aircraftOpenSkiesFlights[[i]]$origin_airport
+      destinationAirportICAO <- aircraftOpenSkiesFlights[[i]]$destination_airport
+      if(!is.null(originAirportICAO)){
+        originAirport <- getAirportMetadata(originAirportICAO)
+        aircraftOpenSkiesFlights[[i]]$origin_airport <- originAirport
+      }
+      if(!is.null(destinationAirportICAO)){
+        destinationAirport <- getAirportMetadata(destinationAirportICAO)
+        aircraftOpenSkiesFlights[[i]]$destination_airport <- destinationAirport
+      }
+    }
   }
   return(aircraftOpenSkiesFlights)
 }
 
 getIntervalFlights <- function(startTime, endTime, timeZone=Sys.timezone(),
-                               username=NULL, password=NULL) {
+                               username=NULL, password=NULL, includeStateVectors=FALSE, 
+                               timeResolution=NULL, useImpalaShell=FALSE, includeAirportsMetadata=FALSE) {
   checkTime(startTime)
   checkTime(endTime)
+  if(includeStateVectors && is.null(timeResolution)){
+    stop("Time resolution must be provided when requesting state vectors.")
+  }
   jsonResponse <- FALSE
   attemptCount <- 0
   while(!jsonResponse) {
@@ -164,5 +234,27 @@ getIntervalFlights <- function(startTime, endTime, timeZone=Sys.timezone(),
   } 
   intervalFlightsList <- formatFlightsListResponse(content(response))
   intervalOpenSkiesFlights <- lapply(intervalFlightsList, listToOpenSkiesFlight)
+  if(includeStateVectors){
+    for(i in 1:length(intervalOpenSkiesFlights)){
+      departureTime <- intervalOpenSkiesFlights[[i]]$departure_time
+      arrivalTime <- intervalOpenSkiesFlights[[i]]$arrival_time
+      stateVectors <- getAircraftStateVectorsSeries(intervalOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useImpalaShell)
+      intervalOpenSkiesFlights[[i]]$state_vectors <- stateVectors
+    }
+  }
+  if(includeAirportsMetadata){
+    for(i in 1:length(intervalOpenSkiesFlights)){
+      originAirportICAO <- intervalOpenSkiesFlights[[i]]$origin_airport
+      destinationAirportICAO <- intervalOpenSkiesFlights[[i]]$destination_airport
+      if(!is.null(originAirportICAO)){
+        originAirport <- getAirportMetadata(originAirportICAO)
+        intervalOpenSkiesFlights[[i]]$origin_airport <- originAirport
+      }
+      if(!is.null(destinationAirportICAO)){
+        destinationAirport <- getAirportMetadata(destinationAirportICAO)
+        intervalOpenSkiesFlights[[i]]$destination_airport <- destinationAirport
+      }
+    }
+  }
   return(intervalOpenSkiesFlights)
 }

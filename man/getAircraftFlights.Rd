@@ -11,7 +11,8 @@ that can be unambiguously converted to POSIXct (such as YYYY-MM-DD HH:MM:SS).
 \usage{
 getAircraftFlights(aircraft, startTime, endTime, timeZone=Sys.timezone(), 
                    username=NULL, password=NULL, includeStateVectors=FALSE, 
-                   timeResolution=NULL)
+                   timeResolution=NULL, useImpalaShell=FALSE, 
+                   includeAirportsMetadata=FALSE)
 }
 \arguments{
   \item{aircraft}{string with the ICAO 24-bit address of an aircraft (for 
@@ -43,6 +44,15 @@ getAircraftFlights(aircraft, startTime, endTime, timeZone=Sys.timezone(),
   }
   \item{timeResolution}{time resolution in seconds with which state vectors
   should be retrieved if \code{includeStateVectors=TRUE}.
+  }
+  \item{useImpalaShell}{logical indicating whether or not to use the OpenSky
+  impala shell instead of the API to retrieve state vectors if \code{includeStateVectors=TRUE}. If used, the provided 
+  username and password are used for the ssh connection. By default, the impala shell
+  is not used.
+  }
+  \item{includeAirportsMetadata}{logical indicating if the data about the origin and destination
+  airports of each flight should also be retrieved. If not, only the ICAO24 code of the airports will be
+  included.
   }
 }
 \value{

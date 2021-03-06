@@ -25,7 +25,8 @@ data than can be accessed varies depending on if login details are provided:
 \usage{
 getSingleTimeStateVectors(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
                           minLatitude=NULL, maxLatitude=NULL, minLongitude=NULL,
-                          maxLongitude=NULL, username=NULL, password=NULL)
+                          maxLongitude=NULL, username=NULL, password=NULL,
+                          useImpalaShell=FALSE)
 }
 \arguments{
   \item{aircraft}{string with the ICAO 24-bit address of an aircraft (for 
@@ -68,6 +69,11 @@ getSingleTimeStateVectors(aircraft=NULL, time=NULL, timeZone=Sys.timezone(),
   }
   \item{password}{optional string with the password to use for authentication
   for the OpenSky API. By default, no authentication is performed.
+  }
+  \item{useImpalaShell}{logical indicating whether or not to use the OpenSky
+  impala shell instead of the API to retrieve state vectors. If used, the provided 
+  username and password are used for the ssh connection. By default, the impala shell
+  is not used.
   }
 }
 \value{

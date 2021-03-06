@@ -18,7 +18,8 @@ users.
 \usage{
 getAircraftStateVectorsSeries(aircraft, startTime, endTime, 
                               timeZone=Sys.timezone(), timeResolution, 
-                              username=NULL, password=NULL)
+                              username=NULL, password=NULL,
+                              useImpalaShell=FALSE)
 }
 \arguments{
   \item{aircraft}{string with the ICAO 24-bit address of an aircraft (for 
@@ -49,6 +50,11 @@ getAircraftStateVectorsSeries(aircraft, startTime, endTime,
   }
   \item{password}{optional string with the password to use for authentication
   for the OpenSky API. By default, no authentication is performed.
+  }
+  \item{useImpalaShell}{logical indicating whether or not to use the OpenSky
+  impala shell instead of the API to retrieve state vectors. If used, the provided 
+  username and password are used for the ssh connection. By default, the impala shell
+  is not used.
   }
 }
 \value{
