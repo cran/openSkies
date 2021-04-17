@@ -1,4 +1,4 @@
-a09532e0d7b6ea091419ed65c8ceacf4 *DESCRIPTION
+9c215c16fa6f03ed3b36cb7f4f31d40e *DESCRIPTION
 f4a92f4148629be02fc9cb5c480e88a3 *NAMESPACE
 4e7414a5d22142b3d717d0afc809d33f *NEWS
 47fa362598cf63ac51460067933fab06 *R/openSkies_checkInputFunctions.R
@@ -15,7 +15,7 @@ ed89129bbc7ee8ec6c0d5d6185bf288d *R/openSkies_variableDefinitions.R
 056c71812926980b19ab9084d8b45984 *build/vignette.rds
 6596f85ebc092a81fada991004027af4 *inst/doc/openSkies.R
 1597f13f3c160a2841e85d73a3ad840c *inst/doc/openSkies.Rmd
-f895e35c697ec8fba7ce3af87016c59c *inst/doc/openSkies.html
+b5b95cd1750d4d49958d16d4f4971e28 *inst/doc/openSkies.html
 c09a7f8ff9e9e69dd8a331f06cf97997 *inst/images/airplane-4-48.png
 4af3405f86aa50e4846e689906cfed40 *inst/unitTests/test_all.R
 e658381a220284e1142a45eb53dcf765 *man/ADSBDecoder.Rd
