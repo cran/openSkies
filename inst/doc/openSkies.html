@@ -257,153 +257,153 @@ of Air Nostrum with registration EC-NCD.</p>
 <p>The function <b>getAirportArrivals()</b> lists all flights that arrived at a
 given airport.</p>
 
-<pre><code class="r"># Get all flights that arrived at Frankfurt International Airport on the 29th of
-# January, 2018 between 12 PM and 1 PM, local time.
+<pre><code class="r"># Get all flights that arrived at Frankfurt International Airport on the 29th
+# of January, 2018 between 12 PM and 1 PM, local time.
 
-getAirportArrivals(airport = &quot;EDDF&quot;, startTime = &quot;2018-01-29 12:00:00&quot;, endTime = &quot;2018-01-29 13:00:00&quot;, 
+getAirportArrivals(airport = &quot;EDDF&quot;, startTime = &quot;2018-01-29 12:00:00&quot;, endTime = &quot;2018-01-29 13:00:00&quot;,
     timeZone = &quot;Europe/Berlin&quot;)
 </code></pre>
 
 <pre><code>## [[1]]
 ## Flight performed by aircraft with ICAO 24-bit address e48ba9
-## Take-off time: 2018-01-29 01:37:37 Europe/Madrid
-## Landing time:  2018-01-29 12:59:26 Europe/Madrid
+## Take-off time: 2018-01-29 09:37:37 Asia/Tokyo
+## Landing time:  2018-01-29 20:59:26 Asia/Tokyo
 ## [[2]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c65ca
-## Take-off time: 2018-01-29 11:58:03 Europe/Madrid
-## Landing time:  2018-01-29 12:59:20 Europe/Madrid
+## Take-off time: 2018-01-29 19:58:03 Asia/Tokyo
+## Landing time:  2018-01-29 20:59:20 Asia/Tokyo
 ## [[3]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c664e
-## Take-off time: 2018-01-29 12:09:37 Europe/Madrid
-## Landing time:  2018-01-29 12:56:22 Europe/Madrid
+## Take-off time: 2018-01-29 20:09:37 Asia/Tokyo
+## Landing time:  2018-01-29 20:56:22 Asia/Tokyo
 ## [[4]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c661a
-## Take-off time: 2018-01-29 11:50:44 Europe/Madrid
-## Landing time:  2018-01-29 12:52:45 Europe/Madrid
+## Take-off time: 2018-01-29 19:50:44 Asia/Tokyo
+## Landing time:  2018-01-29 20:52:45 Asia/Tokyo
 ## [[5]]
 ## Flight performed by aircraft with ICAO 24-bit address 896199
-## Take-off time: 2018-01-29 10:08:30 Europe/Madrid
-## Landing time:  2018-01-29 12:51:37 Europe/Madrid
+## Take-off time: 2018-01-29 18:08:30 Asia/Tokyo
+## Landing time:  2018-01-29 20:51:37 Asia/Tokyo
 ## [[6]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c6495
-## Take-off time: 2018-01-29 12:05:34 Europe/Madrid
-## Landing time:  2018-01-29 12:49:27 Europe/Madrid
+## Take-off time: 2018-01-29 20:05:34 Asia/Tokyo
+## Landing time:  2018-01-29 20:49:27 Asia/Tokyo
 ## [[7]]
 ## Flight performed by aircraft with ICAO 24-bit address 89629c
-## Take-off time: 2018-01-29 10:04:37 Europe/Madrid
-## Landing time:  2018-01-29 12:46:48 Europe/Madrid
+## Take-off time: 2018-01-29 18:04:37 Asia/Tokyo
+## Landing time:  2018-01-29 20:46:48 Asia/Tokyo
 ## [[8]]
 ## Flight performed by aircraft with ICAO 24-bit address 4951d0
-## Take-off time: 2018-01-29 10:01:07 Europe/Madrid
-## Landing time:  2018-01-29 12:45:22 Europe/Madrid
+## Take-off time: 2018-01-29 18:01:07 Asia/Tokyo
+## Landing time:  2018-01-29 20:45:22 Asia/Tokyo
 ## [[9]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c666c
-## Take-off time: 2018-01-29 10:55:09 Europe/Madrid
-## Landing time:  2018-01-29 12:43:53 Europe/Madrid
+## Take-off time: 2018-01-29 18:55:09 Asia/Tokyo
+## Landing time:  2018-01-29 20:43:53 Asia/Tokyo
 ## [[10]]
 ## Flight performed by aircraft with ICAO 24-bit address 508390
-## Take-off time: 2018-01-29 10:27:04 Europe/Madrid
-## Landing time:  2018-01-29 12:42:26 Europe/Madrid
+## Take-off time: 2018-01-29 18:27:04 Asia/Tokyo
+## Landing time:  2018-01-29 20:42:26 Asia/Tokyo
 ## [[11]]
 ## Flight performed by aircraft with ICAO 24-bit address 7804c6
-## Take-off time: 2018-01-29 11:43:10 Europe/Madrid
-## Landing time:  2018-01-29 12:41:28 Europe/Madrid
+## Take-off time: 2018-01-29 19:43:10 Asia/Tokyo
+## Landing time:  2018-01-29 20:41:28 Asia/Tokyo
 ## [[12]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c6634
-## Take-off time: 2018-01-29 11:30:14 Europe/Madrid
-## Landing time:  2018-01-29 12:29:59 Europe/Madrid
+## Take-off time: 2018-01-29 19:30:14 Asia/Tokyo
+## Landing time:  2018-01-29 20:29:59 Asia/Tokyo
 ## [[13]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c65c3
-## Take-off time: 2018-01-29 11:10:33 Europe/Madrid
-## Landing time:  2018-01-29 12:29:27 Europe/Madrid
+## Take-off time: 2018-01-29 19:10:33 Asia/Tokyo
+## Landing time:  2018-01-29 20:29:27 Asia/Tokyo
 ## [[14]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c6676
-## Take-off time: 2018-01-29 11:27:03 Europe/Madrid
-## Landing time:  2018-01-29 12:26:25 Europe/Madrid
+## Take-off time: 2018-01-29 19:27:03 Asia/Tokyo
+## Landing time:  2018-01-29 20:26:25 Asia/Tokyo
 ## [[15]]
 ## Flight performed by aircraft with ICAO 24-bit address 451d85
-## Take-off time: 2018-01-29 10:19:02 Europe/Madrid
-## Landing time:  2018-01-29 12:24:26 Europe/Madrid
+## Take-off time: 2018-01-29 18:19:02 Asia/Tokyo
+## Landing time:  2018-01-29 20:24:26 Asia/Tokyo
 ## [[16]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c66a9
-## Take-off time: 2018-01-29 10:56:20 Europe/Madrid
-## Landing time:  2018-01-29 12:22:43 Europe/Madrid
+## Take-off time: 2018-01-29 18:56:20 Asia/Tokyo
+## Landing time:  2018-01-29 20:22:43 Asia/Tokyo
 ## [[17]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c66aa
-## Take-off time: 2018-01-29 11:24:41 Europe/Madrid
-## Landing time:  2018-01-29 12:21:43 Europe/Madrid
+## Take-off time: 2018-01-29 19:24:41 Asia/Tokyo
+## Landing time:  2018-01-29 20:21:43 Asia/Tokyo
 ## [[18]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c6655
-## Take-off time: 2018-01-29 11:30:00 Europe/Madrid
-## Landing time:  2018-01-29 12:21:18 Europe/Madrid
+## Take-off time: 2018-01-29 19:30:00 Asia/Tokyo
+## Landing time:  2018-01-29 20:21:18 Asia/Tokyo
 ## [[19]]
 ## Flight performed by aircraft with ICAO 24-bit address 4baa03
-## Take-off time: 2018-01-29 09:34:04 Europe/Madrid
-## Landing time:  2018-01-29 12:19:57 Europe/Madrid
+## Take-off time: 2018-01-29 17:34:04 Asia/Tokyo
+## Landing time:  2018-01-29 20:19:57 Asia/Tokyo
 ## [[20]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c667a
-## Take-off time: 2018-01-29 11:29:33 Europe/Madrid
-## Landing time:  2018-01-29 12:19:18 Europe/Madrid
+## Take-off time: 2018-01-29 19:29:33 Asia/Tokyo
+## Landing time:  2018-01-29 20:19:18 Asia/Tokyo
 ## [[21]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c5463
-## Take-off time: 2018-01-29 11:13:10 Europe/Madrid
-## Landing time:  2018-01-29 12:17:59 Europe/Madrid
+## Take-off time: 2018-01-29 19:13:10 Asia/Tokyo
+## Landing time:  2018-01-29 20:17:59 Asia/Tokyo
 ## [[22]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c6626
-## Take-off time: 2018-01-29 11:33:30 Europe/Madrid
-## Landing time:  2018-01-29 12:15:16 Europe/Madrid
+## Take-off time: 2018-01-29 19:33:30 Asia/Tokyo
+## Landing time:  2018-01-29 20:15:16 Asia/Tokyo
 ## [[23]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c6598
-## Take-off time: 2018-01-29 11:37:30 Europe/Madrid
-## Landing time:  2018-01-29 12:15:13 Europe/Madrid
+## Take-off time: 2018-01-29 19:37:30 Asia/Tokyo
+## Landing time:  2018-01-29 20:15:13 Asia/Tokyo
 ## [[24]]
 ## Flight performed by aircraft with ICAO 24-bit address 4ca78d
-## Take-off time: 2018-01-29 10:19:42 Europe/Madrid
-## Landing time:  2018-01-29 12:14:06 Europe/Madrid
+## Take-off time: 2018-01-29 18:19:42 Asia/Tokyo
+## Landing time:  2018-01-29 20:14:06 Asia/Tokyo
 ## [[25]]
 ## Flight performed by aircraft with ICAO 24-bit address 06a052
-## Take-off time: 2018-01-28 23:10:57 Europe/Madrid
-## Landing time:  2018-01-29 12:13:58 Europe/Madrid
+## Take-off time: 2018-01-29 07:10:57 Asia/Tokyo
+## Landing time:  2018-01-29 20:13:58 Asia/Tokyo
 ## [[26]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c5469
-## Take-off time: 2018-01-29 11:14:02 Europe/Madrid
-## Landing time:  2018-01-29 12:12:27 Europe/Madrid
+## Take-off time: 2018-01-29 19:14:02 Asia/Tokyo
+## Landing time:  2018-01-29 20:12:27 Asia/Tokyo
 ## [[27]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c66ac
-## Take-off time: 2018-01-29 10:24:33 Europe/Madrid
-## Landing time:  2018-01-29 12:11:24 Europe/Madrid
+## Take-off time: 2018-01-29 18:24:33 Asia/Tokyo
+## Landing time:  2018-01-29 20:11:24 Asia/Tokyo
 ## [[28]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c658b
-## Take-off time: 2018-01-29 11:08:31 Europe/Madrid
-## Landing time:  2018-01-29 12:10:46 Europe/Madrid
+## Take-off time: 2018-01-29 19:08:31 Asia/Tokyo
+## Landing time:  2018-01-29 20:10:46 Asia/Tokyo
 ## [[29]]
 ## Flight performed by aircraft with ICAO 24-bit address 400152
-## Take-off time: 2018-01-29 08:31:30 Europe/Madrid
-## Landing time:  2018-01-29 12:09:52 Europe/Madrid
+## Take-off time: 2018-01-29 16:31:30 Asia/Tokyo
+## Landing time:  2018-01-29 20:09:52 Asia/Tokyo
 ## [[30]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c66ae
-## Take-off time: 2018-01-29 11:18:00 Europe/Madrid
-## Landing time:  2018-01-29 12:08:59 Europe/Madrid
+## Take-off time: 2018-01-29 19:18:00 Asia/Tokyo
+## Landing time:  2018-01-29 20:08:59 Asia/Tokyo
 ## [[31]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c644a
-## Take-off time: 2018-01-29 11:12:32 Europe/Madrid
-## Landing time:  2018-01-29 12:08:05 Europe/Madrid
+## Take-off time: 2018-01-29 19:12:32 Asia/Tokyo
+## Landing time:  2018-01-29 20:08:05 Asia/Tokyo
 ## [[32]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c66a2
-## Take-off time: 2018-01-29 11:25:25 Europe/Madrid
-## Landing time:  2018-01-29 12:07:22 Europe/Madrid
+## Take-off time: 2018-01-29 19:25:25 Asia/Tokyo
+## Landing time:  2018-01-29 20:07:22 Asia/Tokyo
 ## [[33]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c4aa6
-## Take-off time: 2018-01-28 12:47:21 Europe/Madrid
-## Landing time:  2018-01-29 12:03:55 Europe/Madrid
+## Take-off time: 2018-01-28 20:47:21 Asia/Tokyo
+## Landing time:  2018-01-29 20:03:55 Asia/Tokyo
 ## [[34]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c6667
-## Take-off time: 2018-01-29 10:54:41 Europe/Madrid
-## Landing time:  2018-01-29 12:03:42 Europe/Madrid
+## Take-off time: 2018-01-29 18:54:41 Asia/Tokyo
+## Landing time:  2018-01-29 20:03:42 Asia/Tokyo
 ## [[35]]
 ## Flight performed by aircraft with ICAO 24-bit address 3c6621
-## Take-off time: 2018-01-29 11:32:21 Europe/Madrid
-## Landing time:  2018-01-29 12:01:58 Europe/Madrid
+## Take-off time: 2018-01-29 19:32:21 Asia/Tokyo
+## Landing time:  2018-01-29 20:01:58 Asia/Tokyo
 </code></pre>
 
 <p>The function <b>getAirportDepartures()</b> lists all flights that arrived at a
@@ -412,50 +412,50 @@ given airport.</p>
 <pre><code class="r"># Get all flights that departed from Barcelona Airport on the 12th of October,
 # 2020 between 5 AM and 7 AM, local time.
 
-getAirportDepartures(airport = &quot;LEBL&quot;, startTime = &quot;2020-10-12 05:00:00&quot;, endTime = &quot;2020-10-12 07:00:00&quot;, 
+getAirportDepartures(airport = &quot;LEBL&quot;, startTime = &quot;2020-10-12 05:00:00&quot;, endTime = &quot;2020-10-12 07:00:00&quot;,
     timeZone = &quot;Europe/Madrid&quot;)
 </code></pre>
 
 <pre><code>## [[1]]
 ## Flight performed by aircraft with ICAO 24-bit address 345313
-## Take-off time: 2020-10-12 06:59:24 Europe/Madrid
-## Landing time:  2020-10-12 08:08:29 Europe/Madrid
+## Take-off time: 2020-10-12 13:59:24 Asia/Tokyo
+## Landing time:  2020-10-12 15:08:29 Asia/Tokyo
 ## [[2]]
 ## Flight performed by aircraft with ICAO 24-bit address 4ca912
-## Take-off time: 2020-10-12 06:49:48 Europe/Madrid
-## Landing time:  2020-10-12 07:20:27 Europe/Madrid
+## Take-off time: 2020-10-12 13:49:48 Asia/Tokyo
+## Landing time:  2020-10-12 14:20:27 Asia/Tokyo
 ## [[3]]
 ## Flight performed by aircraft with ICAO 24-bit address 4ca703
-## Take-off time: 2020-10-12 06:41:08 Europe/Madrid
-## Landing time:  2020-10-12 08:44:48 Europe/Madrid
+## Take-off time: 2020-10-12 13:41:08 Asia/Tokyo
+## Landing time:  2020-10-12 15:44:48 Asia/Tokyo
 ## [[4]]
 ## Flight performed by aircraft with ICAO 24-bit address 484cb5
-## Take-off time: 2020-10-12 06:29:16 Europe/Madrid
-## Landing time:  2020-10-12 08:27:53 Europe/Madrid
+## Take-off time: 2020-10-12 13:29:16 Asia/Tokyo
+## Landing time:  2020-10-12 15:27:53 Asia/Tokyo
 ## [[5]]
 ## Flight performed by aircraft with ICAO 24-bit address 3944f9
-## Take-off time: 2020-10-12 06:24:03 Europe/Madrid
-## Landing time:  2020-10-12 08:12:29 Europe/Madrid
+## Take-off time: 2020-10-12 13:24:03 Asia/Tokyo
+## Landing time:  2020-10-12 15:12:29 Asia/Tokyo
 ## [[6]]
 ## Flight performed by aircraft with ICAO 24-bit address 4ca8af
-## Take-off time: 2020-10-12 06:22:20 Europe/Madrid
-## Landing time:  2020-10-12 08:46:41 Europe/Madrid
+## Take-off time: 2020-10-12 13:22:20 Asia/Tokyo
+## Landing time:  2020-10-12 15:46:41 Asia/Tokyo
 ## [[7]]
 ## Flight performed by aircraft with ICAO 24-bit address 4ca2d6
-## Take-off time: 2020-10-12 06:20:53 Europe/Madrid
-## Landing time:  2020-10-12 08:14:47 Europe/Madrid
+## Take-off time: 2020-10-12 13:20:53 Asia/Tokyo
+## Landing time:  2020-10-12 15:14:47 Asia/Tokyo
 ## [[8]]
 ## Flight performed by aircraft with ICAO 24-bit address 4ca4f8
-## Take-off time: 2020-10-12 06:08:48 Europe/Madrid
-## Landing time:  2020-10-12 09:05:39 Europe/Madrid
+## Take-off time: 2020-10-12 13:08:48 Asia/Tokyo
+## Landing time:  2020-10-12 16:05:39 Asia/Tokyo
 ## [[9]]
 ## Flight performed by aircraft with ICAO 24-bit address 4ca4e8
-## Take-off time: 2020-10-12 06:06:45 Europe/Madrid
-## Landing time:  2020-10-12 07:24:17 Europe/Madrid
+## Take-off time: 2020-10-12 13:06:45 Asia/Tokyo
+## Landing time:  2020-10-12 14:24:17 Asia/Tokyo
 ## [[10]]
 ## Flight performed by aircraft with ICAO 24-bit address a382b3
-## Take-off time: 2020-10-12 05:46:22 Europe/Madrid
-## Landing time:  2020-10-12 07:32:05 Europe/Madrid
+## Take-off time: 2020-10-12 12:46:22 Asia/Tokyo
+## Landing time:  2020-10-12 14:32:05 Asia/Tokyo
 </code></pre>
 
 <p>The function <b>getAircraftFlights()</b> lists all flights performed by a given
@@ -464,30 +464,30 @@ aircraft.</p>
 <pre><code class="r"># Get all flights registered for the aircraft with ICAO 24-bit address 346190
 # during the 26th of July, 2019.
 
-getAircraftFlights(&quot;346190&quot;, startTime = &quot;2019-07-26 00:00:00&quot;, endTime = &quot;2019-07-26 23:59:59&quot;, 
+getAircraftFlights(&quot;346190&quot;, startTime = &quot;2019-07-26 00:00:00&quot;, endTime = &quot;2019-07-26 23:59:59&quot;,
     timeZone = &quot;Europe/Madrid&quot;)
 </code></pre>
 
 <pre><code>## [[1]]
 ## Flight performed by aircraft with ICAO 24-bit address 346190
-## Take-off time: 2019-07-26 16:27:36 Europe/Madrid
-## Landing time:  2019-07-26 17:52:57 Europe/Madrid
+## Take-off time: 2019-07-26 23:27:36 Asia/Tokyo
+## Landing time:  2019-07-27 00:52:57 Asia/Tokyo
 ## [[2]]
 ## Flight performed by aircraft with ICAO 24-bit address 346190
-## Take-off time: 2019-07-26 14:15:31 Europe/Madrid
-## Landing time:  2019-07-26 14:54:28 Europe/Madrid
+## Take-off time: 2019-07-26 21:15:31 Asia/Tokyo
+## Landing time:  2019-07-26 21:54:28 Asia/Tokyo
 ## [[3]]
 ## Flight performed by aircraft with ICAO 24-bit address 346190
-## Take-off time: 2019-07-26 12:48:45 Europe/Madrid
-## Landing time:  2019-07-26 13:27:10 Europe/Madrid
+## Take-off time: 2019-07-26 19:48:45 Asia/Tokyo
+## Landing time:  2019-07-26 20:27:10 Asia/Tokyo
 ## [[4]]
 ## Flight performed by aircraft with ICAO 24-bit address 346190
-## Take-off time: 2019-07-26 08:54:01 Europe/Madrid
-## Landing time:  2019-07-26 09:30:52 Europe/Madrid
+## Take-off time: 2019-07-26 15:54:01 Asia/Tokyo
+## Landing time:  2019-07-26 16:30:52 Asia/Tokyo
 ## [[5]]
 ## Flight performed by aircraft with ICAO 24-bit address 346190
-## Take-off time: 2019-07-26 07:32:33 Europe/Madrid
-## Landing time:  2019-07-26 08:09:58 Europe/Madrid
+## Take-off time: 2019-07-26 14:32:33 Asia/Tokyo
+## Landing time:  2019-07-26 15:09:58 Asia/Tokyo
 </code></pre>
 
 <p>The function <b>getIntervalFlights()</b> lists all flights registered during a 
@@ -498,7 +498,7 @@ time interval.</p>
 <pre><code class="r"># Obtain a list with information for all the flights registered during the 16th
 # of November, 2019 between 9 AM and 10 AM, London time.
 
-flights &lt;- getIntervalFlights(startTime = &quot;2019-11-16 09:00:00&quot;, endTime = &quot;2019-11-16 10:00:00&quot;, 
+flights &lt;- getIntervalFlights(startTime = &quot;2019-11-16 09:00:00&quot;, endTime = &quot;2019-11-16 10:00:00&quot;,
     timeZone = &quot;Europe/London&quot;)
 
 # Count the number of registered flights.
@@ -521,26 +521,16 @@ details).</p>
 received at a specified time point, filtered by different criteria (such as 
 aircraft or location). </p>
 
-<pre><code class="r"># Obtain a list with the state vectors for all aircrafts currently flying over an
-# area covering Switzerland.
+<pre><code class="r"># Obtain a list with the state vectors for all aircrafts currently flying over
+# an area covering Switzerland.
 
-getSingleTimeStateVectors(minLatitude = 45.8389, maxLatitude = 47.8229, minLongitude = 5.9962, 
+getSingleTimeStateVectors(minLatitude = 45.8389, maxLatitude = 47.8229, minLongitude = 5.9962,
     maxLongitude = 10.5226)
 </code></pre>
 
-<pre><code>## &lt;openSkiesStateVectorSet&gt;
-##   Public:
-##     add_state_vector: function (state_vector) 
-##     clone: function (deep = FALSE) 
-##     get_time_points_interpolation: function (fields, time_field, timestamps, method = &quot;fmm&quot;) 
-##     get_uniform_interpolation: function (n, fields, method = &quot;fmm&quot;) 
-##     get_values: function (field, removeNAs = FALSE, unwrapAngles = FALSE) 
-##     initialize: function (state_vectors_list, time_series = FALSE, segments_categories = NULL) 
-##     segments_categories: NULL
-##     sort_by_field: function (field, decreasing = FALSE) 
-##     split_into_flights: function (timeOnLandThreshold = 300, timeDiffThreshold = 1800) 
-##     state_vectors: list
-##     time_series: FALSE
+<pre><code>## State vector set with110state vectors
+## Requested time:  Asia/Tokyo
+## Last status update at:  Asia/Tokyo
 </code></pre>
 
 <pre><code class="r"># Obtain the state vector for aircraft with ICAO 24-bit address 403003 for the
@@ -550,35 +540,25 @@ getSingleTimeStateVectors(aircraft = &quot;403003&quot;, time = &quot;2020-10-08
 </code></pre>
 
 <pre><code>## State vector for aircraft with ICAO24403003
-## Requested time: 2020-10-08 17:50:00 Europe/Madrid
-## Last status update at: 2020-10-08 17:49:59 Europe/Madrid
+## Requested time: 2020-10-09 00:50:00 Asia/Tokyo
+## Last status update at: 2020-10-09 00:49:59 Asia/Tokyo
 </code></pre>
 
 <p>It is also possible to retrieve a time series of state vectors for a specific
 aircraft. It should be noted that this type of requests can take a relatively
 long time to finish if a large amount of data points are requested.</p>
 
-<pre><code class="r"># Obtain a time series of state vectors for the aircraft with ICAO 24-bit address
-# 403003 for the 8th of October, 2020 between 16:50 and 16:53 (London time), with
-# a time resolution of 1 minute.
+<pre><code class="r"># Obtain a time series of state vectors for the aircraft with ICAO 24-bit
+# address 403003 for the 8th of October, 2020 between 16:50 and 16:53 (London
+# time), with a time resolution of 1 minute.
 
-getAircraftStateVectorsSeries(&quot;403003&quot;, startTime = &quot;2020-10-08 16:50:00&quot;, endTime = &quot;2020-10-08 16:52:00&quot;, 
+getAircraftStateVectorsSeries(&quot;403003&quot;, startTime = &quot;2020-10-08 16:50:00&quot;, endTime = &quot;2020-10-08 16:52:00&quot;,
     timeZone = &quot;Europe/London&quot;, timeResolution = 60)
 </code></pre>
 
-<pre><code>## &lt;openSkiesStateVectorSet&gt;
-##   Public:
-##     add_state_vector: function (state_vector) 
-##     clone: function (deep = FALSE) 
-##     get_time_points_interpolation: function (fields, time_field, timestamps, method = &quot;fmm&quot;) 
-##     get_uniform_interpolation: function (n, fields, method = &quot;fmm&quot;) 
-##     get_values: function (field, removeNAs = FALSE, unwrapAngles = FALSE) 
-##     initialize: function (state_vectors_list, time_series = FALSE, segments_categories = NULL) 
-##     segments_categories: NULL
-##     sort_by_field: function (field, decreasing = FALSE) 
-##     split_into_flights: function (timeOnLandThreshold = 300, timeDiffThreshold = 1800) 
-##     state_vectors: list
-##     time_series: TRUE
+<pre><code>## State vector set with3state vectors
+## Requested time:  Asia/Tokyo
+## Last status update at:  Asia/Tokyo
 </code></pre>
 
 <h1>System of R6 classes for aviation data</h1>
