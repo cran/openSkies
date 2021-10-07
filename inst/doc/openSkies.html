@@ -257,10 +257,10 @@ of Air Nostrum with registration EC-NCD.</p>
 <p>The function <b>getAirportArrivals()</b> lists all flights that arrived at a
 given airport.</p>
 
-<pre><code class="r"># Get all flights that arrived at Frankfurt International Airport on the 29th of
-# January, 2018 between 12 PM and 1 PM, local time.
+<pre><code class="r"># Get all flights that arrived at Frankfurt International Airport on the 29th
+# of January, 2018 between 12 PM and 1 PM, local time.
 
-getAirportArrivals(airport = &quot;EDDF&quot;, startTime = &quot;2018-01-29 12:00:00&quot;, endTime = &quot;2018-01-29 13:00:00&quot;, 
+getAirportArrivals(airport = &quot;EDDF&quot;, startTime = &quot;2018-01-29 12:00:00&quot;, endTime = &quot;2018-01-29 13:00:00&quot;,
     timeZone = &quot;Europe/Berlin&quot;)
 </code></pre>
 
@@ -270,7 +270,7 @@ given airport.</p>
 <pre><code class="r"># Get all flights that departed from Barcelona Airport on the 12th of October,
 # 2020 between 5 AM and 7 AM, local time.
 
-getAirportDepartures(airport = &quot;LEBL&quot;, startTime = &quot;2020-10-12 05:00:00&quot;, endTime = &quot;2020-10-12 07:00:00&quot;, 
+getAirportDepartures(airport = &quot;LEBL&quot;, startTime = &quot;2020-10-12 05:00:00&quot;, endTime = &quot;2020-10-12 07:00:00&quot;,
     timeZone = &quot;Europe/Madrid&quot;)
 </code></pre>
 
@@ -280,7 +280,7 @@ aircraft.</p>
 <pre><code class="r"># Get all flights registered for the aircraft with ICAO 24-bit address 346190
 # during the 26th of July, 2019.
 
-getAircraftFlights(&quot;346190&quot;, startTime = &quot;2019-07-26 00:00:00&quot;, endTime = &quot;2019-07-26 23:59:59&quot;, 
+getAircraftFlights(&quot;346190&quot;, startTime = &quot;2019-07-26 00:00:00&quot;, endTime = &quot;2019-07-26 23:59:59&quot;,
     timeZone = &quot;Europe/Madrid&quot;)
 </code></pre>
 
@@ -292,7 +292,7 @@ time interval.</p>
 <pre><code class="r"># Obtain a list with information for all the flights registered during the 16th
 # of November, 2019 between 9 AM and 10 AM, London time.
 
-flights &lt;- getIntervalFlights(startTime = &quot;2019-11-16 09:00:00&quot;, endTime = &quot;2019-11-16 10:00:00&quot;, 
+flights &lt;- getIntervalFlights(startTime = &quot;2019-11-16 09:00:00&quot;, endTime = &quot;2019-11-16 10:00:00&quot;,
     timeZone = &quot;Europe/London&quot;)
 
 # Count the number of registered flights.
@@ -312,10 +312,10 @@ details).</p>
 received at a specified time point, filtered by different criteria (such as 
 aircraft or location). </p>
 
-<pre><code class="r"># Obtain a list with the state vectors for all aircrafts currently flying over an
-# area covering Switzerland.
+<pre><code class="r"># Obtain a list with the state vectors for all aircrafts currently flying over
+# an area covering Switzerland.
 
-getSingleTimeStateVectors(minLatitude = 45.8389, maxLatitude = 47.8229, minLongitude = 5.9962, 
+getSingleTimeStateVectors(minLatitude = 45.8389, maxLatitude = 47.8229, minLongitude = 5.9962,
     maxLongitude = 10.5226)
 
 # Obtain the state vector for aircraft with ICAO 24-bit address 403003 for the
@@ -328,11 +328,11 @@ getSingleTimeStateVectors(aircraft = &quot;403003&quot;, time = &quot;2020-10-08
 aircraft. It should be noted that this type of requests can take a relatively
 long time to finish if a large amount of data points are requested.</p>
 
-<pre><code class="r"># Obtain a time series of state vectors for the aircraft with ICAO 24-bit address
-# 403003 for the 8th of October, 2020 between 16:50 and 16:53 (London time), with
-# a time resolution of 1 minute.
+<pre><code class="r"># Obtain a time series of state vectors for the aircraft with ICAO 24-bit
+# address 403003 for the 8th of October, 2020 between 16:50 and 16:53 (London
+# time), with a time resolution of 1 minute.
 
-getAircraftStateVectorsSeries(&quot;403003&quot;, startTime = &quot;2020-10-08 16:50:00&quot;, endTime = &quot;2020-10-08 16:52:00&quot;, 
+getAircraftStateVectorsSeries(&quot;403003&quot;, startTime = &quot;2020-10-08 16:50:00&quot;, endTime = &quot;2020-10-08 16:52:00&quot;,
     timeZone = &quot;Europe/London&quot;, timeResolution = 60)
 </code></pre>
 
