@@ -154,24 +154,39 @@ openSkiesStateVectorSet <- R6Class(
     #   self$segments_categories <- categories
     #   invisible(self)
     # },
-    get_values = function(field, removeNAs=FALSE, unwrapAngles=FALSE) {
-      if(!(field %in% c("ICAO24", "call_sign", "origin_country", "requested_time",
-                        "last_position_update_time", "last_any_update_time",
-                        "longitude", "latitude", "baro_altitude", "geo_altitude",
-                        "on_ground", "velocity", "true_track", "vertical_rate",
-                        "squawk", "special_purpose_indicator", "position_source"))){
-        stop(paste(field, " is not a valid openSkiesStateVector field name", sep=""))
+    get_values = function(fields, removeNAs=FALSE, unwrapAngles=FALSE) {
+      for(field in fields) {
+        if(!(field %in% c("ICAO24", "call_sign", "origin_country", "requested_time",
+                          "last_position_update_time", "last_any_update_time",
+                          "longitude", "latitude", "baro_altitude", "geo_altitude",
+                          "on_ground", "velocity", "true_track", "vertical_rate",
+                          "squawk", "special_purpose_indicator", "position_source"))){
+          stop(paste(field, " is not a valid openSkiesStateVector field name", sep=""))
+        }
       }
-      values <- lapply(as.list(self$state_vectors), "[[", field)
-      if(removeNAs){
-        values <- values[sapply(values, function(x) length(x)!=0L)]
+      if(length(fields) == 1) {
+        field <- fields
+        values <- lapply(as.list(self$state_vectors), "[[", field)
+        if(removeNAs){
+          values <- values[sapply(values, function(x) length(x)!=0L)]
+        } else {
+          values[sapply(values, function(x) length(x)==0L)] <- NA
+        }
+        values <- unlist(values)
+        if(field %in% c("true_track")){
+          if(unwrapAngles){
+            values <- unwrapAngles(values)
+          }
+        }
       } else {
-        values[sapply(values, function(x) length(x)==0L)] <- NA
-      }
-      values <- unlist(values)
-      if(field %in% c("true_track")){
-        if(unwrapAngles){
-          values <- unwrapAngles(values)
+        values <- lapply(as.list(self$state_vectors), mget, x=fields)
+        values <- eval(parse(text = gsub("NULL", "NA", deparse(values))))
+        values <- do.call(rbind.data.frame, values)
+        if(removeNAs) {
+          values <- values[rowSums(is.na(values)) != ncol(values), ]
+        }
+        if(("true_track" %in% fields) & unwrapAngles) {
+          values$true_track <- unwrapAngles(values$true_track)
         }
       }
       return(values)
@@ -341,7 +356,7 @@ openSkiesStateVectorSet <- R6Class(
       } else if (updateType == "any") {
         updateField <- "last_any_update_time"
       } 
-      self$sort_by_field(updateField)
+      self$sort_by_field("requested_time")
       nonRedundantIndeces <- !duplicated(self$get_values(updateField))
       self$state_vectors <- self$state_vectors[nonRedundantIndeces]
       invisible(self)
@@ -465,6 +480,7 @@ openSkiesFlight <- R6Class(
     ICAO24 = character(),
     call_sign = character(),
     state_vectors = NULL,
+    flight_phases = NULL,
     origin_airport = NULL, #Could be an openSkiesAirport object (future)
     destination_airport = NULL, #Could be an openSkiesAirport object (future)
     departure_time = character(),
@@ -472,6 +488,7 @@ openSkiesFlight <- R6Class(
     initialize = function(ICAO24,
                           call_sign = NULL,
                           state_vectors = NULL,
+                          flight_phases = NULL,
                           origin_airport = NULL,
                           destination_airport = NULL,
                           departure_time,
@@ -534,6 +551,20 @@ openSkiesFlight <- R6Class(
         distance = distancesSum / numPoints
       }
       return(distance)
+    },
+    detect_phases = function(time_window, use_baro_altitude = FALSE) {
+        if(use_baro_altitude) {
+            altitude_field = "baro_altitude"
+        } else {
+            altitude_field = "geo_altitude"
+        }
+        input = flight$state_vectors$get_values(c("requested_time", altitude_field,
+                                                  "vertical_rate", "velocity"))
+        labels = findFlightPhases(input$requested_time, input[,altitude_field], 
+                                  input$vertical_rate, input$velocity, time_window)
+        self$flight_phases = data.frame(time = input$requested_time - input$requested_time[1],
+                                        phase = labels)
+        return(labels)
     },
     print = function(...) {
       cat("Flight performed by aircraft with ICAO 24-bit address ", self$ICAO24, "\n", sep = "")

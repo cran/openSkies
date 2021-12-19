@@ -72,7 +72,7 @@ listToOpenSkiesStateVector <- function(stateVectorList) {
 }
 
 unwrapAngles <- function(angles, usingRadians=FALSE) {
-  newAngles = c(angles[0])
+  newAngles = c(angles[1])
   loops = 0
   if(usingRadians){
     threshold = pi
@@ -87,10 +87,10 @@ unwrapAngles <- function(angles, usingRadians=FALSE) {
     angle2 = angles[i]
     diff = angle2 - angle1
     # Counter-clockwise loop
-    if(angle1>halfValue && angle2<halfValue && diff <= -threshold){
+    if(angle1>halfValue & angle2<halfValue & diff <= -threshold){
       loops = loops + 1
       # Clockwise loop
-    } else if(angle2>halfValue && angle1<halfValue && diff >= threshold){
+    } else if(angle2>halfValue & angle1<halfValue & diff >= threshold){
       loops = loops - 1
     }
     newAngle = angle2 + loops * (2*halfValue)
@@ -259,6 +259,37 @@ runImpalaQuery <- function(query, username, password){
   colnames(data_matrix) <- columnNames
   ssh_disconnect(session)
   return(data_matrix)
+}
+
+G_membership <- function(x, mu, sigma) {
+    membership <- exp((-(x - mu)^2) / (2*sigma^2))
+    return(membership)
+}
+
+Z_membership <- function(x, a, b) {
+    membership <- numeric(length(x))
+    set1 <- x <= a
+    set2 <- (x >= a) & (x <= ((a + b)/2))
+    set3 <- (x >= ((a + b)/2)) & (x <= b)
+    set4 <- x >= b
+    membership[set1] <- 1
+    membership[set2] <- 1 - 2*((x[set2] - a)/(b - a))^2
+    membership[set3] <- 2*((x[set3] - b)/(b - a))^2
+    membership[set4] <- 0
+    return(membership)
+}
+
+S_membership <- function(x, a, b) {
+    membership <- numeric(length(x))
+    set1 <- x <= a
+    set2 <- (x >= a) & (x <= ((a + b)/2))
+    set3 <- (x >= ((a + b)/2)) & (x <= b)
+    set4 <- x >= b
+    membership[set1] <- 0
+    membership[set2] <- 2*((x[set2] - a)/(b - a))^2
+    membership[set3] <- 1 - 2*((x[set3] - b)/(b - a))^2
+    membership[set4] <- 1
+    return(membership)
 }
 
 # generateEnclosingAirspace <- function(elements, groupingFunction){ TODO
