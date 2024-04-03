@@ -233,6 +233,35 @@ makeImpalaQueryStateVectorsInterval <- function(aircraft=NULL, startTime, endTim
   return(query)
 }
 
+getTrinoToken <- function(username, password) {
+  request = POST("https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token",
+                 body=list(client_id="trino-client", grant_type="password", username=username, password=password), encode="form")
+  token <- content(request)$access_token
+  return(token)
+}
+
+getTrinoConnection <- function(username, token) {
+    set_config(
+        add_headers(Authorization = paste("Bearer", token)),
+        override = TRUE
+        )
+    con <- dbConnect(
+        drv = RPresto::Presto(),
+        host = "https://trino.opensky-network.org",
+        port = 443,
+        user = username,
+        catalog = "minio",
+        schema = "osky",
+        use.trino.headers=TRUE)
+    set_config(config())
+    return(con)
+}
+
+runTrinoQuery <- function(query, connection) {
+    result <- dbGetQuery(connection, query)
+    return(as.data.frame(result))
+}
+
 runImpalaQuery <- function(query, username, password){
   session <- ssh_connect(paste(username,"@data.opensky-network.org:2230"), passwd=password)
   lines <- rawToChar(ssh_exec_internal(session,paste("-q ", query))$stdout)
@@ -296,3 +325,278 @@ S_membership <- function(x, a, b) {
 #   
 #   
 # }
+
+makeIntervals <- function(startTime, endTime, timeZone, intervalLength) {
+    intervalSecs <- abs(difftime(endTime, startTime, units = "secs"))
+    if(intervalSecs > intervalLength) {
+        numberOfIntervals <- as.numeric(intervalSecs/intervalLength)
+        IntNumberOfIntervals <- trunc(numberOfIntervals)
+        fracIntervals <- numberOfIntervals %% 1
+        startTimes <- as.character(
+            as.POSIXct(startTime, tz=timeZone) +
+                seq(from=0, by=intervalLength+1, length.out=IntNumberOfIntervals + 1)
+        )
+        endTimes <- c(
+            as.character(
+                as.POSIXct(startTime, tz=timeZone) +
+                    seq(from=intervalLength, by=intervalLength, length.out=IntNumberOfIntervals)
+            )
+            , endTime)
+        if(fracIntervals == 0) {
+            startTimes <- head(startTimes, -1)
+            endTimes <- head(endTimes, -1)
+        }
+    } else {
+        startTimes <- startTime
+        endTimes <- endTime
+    }
+    return(list(startTimes, endTimes))
+}
+
+getAirportArrivalsSingleInterval <- function(airport, startTime, endTime, timeZone, 
+                                             username, password, includeStateVectors, 
+                                             timeResolution, useTrino, 
+                                             includeAirportsMetadata, timeOut,
+                                             maxQueryAttempts) {
+    jsonResponse <- FALSE
+    attemptCount <- 0
+    while(!jsonResponse) {
+        attemptCount <- attemptCount + 1
+        response <- tryCatch({
+            GET(paste(openskyApiRootURL, "flights/arrival", sep="" ),
+                query=list(airport=airport,
+                           begin=stringToEpochs(startTime, timeZone),
+                           end=stringToEpochs(endTime, timeZone)),
+                timeout(timeOut),
+                if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+        },
+        error = function(e) e
+        )
+        if(inherits(response, "error")) {
+            message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+            return(NULL)
+        }
+        jsonResponse <- grepl("json", headers(response)$`content-type`)
+        if(attemptCount > maxQueryAttempts) {
+            message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+            return(NULL)
+        }
+    }
+    if(status_code(response) != 200) {
+        # message(strwrap("No arrivals found for the specified interval and 
+        #             airport.", initial="", prefix="\n"))
+        return(NULL)
+    }
+    arrivalsList <- formatFlightsListResponse(content(response))
+    arrivalsOpenSkiesFlights <- lapply(arrivalsList, listToOpenSkiesFlight)
+    if(includeStateVectors){
+        for(i in 1:length(arrivalsOpenSkiesFlights)){
+            departureTime <- arrivalsOpenSkiesFlights[[i]]$departure_time
+            arrivalTime <- arrivalsOpenSkiesFlights[[i]]$arrival_time
+            stateVectors <- getAircraftStateVectorsSeries(arrivalsOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useTrino)
+            arrivalsOpenSkiesFlights[[i]]$state_vectors <- stateVectors
+        }
+    }
+    if(includeAirportsMetadata){
+        for(i in 1:length(arrivalsOpenSkiesFlights)){
+            originAirportICAO <- arrivalsOpenSkiesFlights[[i]]$origin_airport
+            destinationAirportICAO <- arrivalsOpenSkiesFlights[[i]]$destination_airport
+            if(!is.null(originAirportICAO)){
+                originAirport <- getAirportMetadata(originAirportICAO)
+                arrivalsOpenSkiesFlights[[i]]$origin_airport <- originAirport
+            }
+            if(!is.null(destinationAirportICAO)){
+                destinationAirport <- getAirportMetadata(destinationAirportICAO)
+                arrivalsOpenSkiesFlights[[i]]$destination_airport <- destinationAirport
+            }
+        }
+    }
+    return(arrivalsOpenSkiesFlights)
+}
+
+getAirportDeparturesSingleInterval <- function(airport, startTime, endTime, timeZone,
+                                               username, password, includeStateVectors, 
+                                               timeResolution, useTrino, includeAirportsMetadata,
+                                               timeOut, maxQueryAttempts) {
+    jsonResponse <- FALSE
+    attemptCount <- 0
+    while(!jsonResponse) {
+        attemptCount <- attemptCount + 1
+        response <- tryCatch({
+            GET(paste(openskyApiRootURL, "flights/departure", sep="" ),
+                query=list(airport=airport,
+                           begin=stringToEpochs(startTime, timeZone),
+                           end=stringToEpochs(endTime, timeZone)),
+                timeout(timeOut),
+                if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+        },
+        error = function(e) e
+        )
+        if(inherits(response, "error")) {
+            message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+            return(NULL)
+        }
+        jsonResponse <- grepl("json", headers(response)$`content-type`)
+        if(attemptCount > maxQueryAttempts) {
+            message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+            return(NULL)
+        }
+    }
+    if(status_code(response) != 200) {
+        # message(strwrap("No departures found for the specified interval and 
+        #             airport.", initial="", prefix="\n"))
+        return(NULL)
+    }
+    departuresList <- formatFlightsListResponse(content(response))
+    departuresOpenSkiesFlights <- lapply(departuresList, listToOpenSkiesFlight)
+    if(includeStateVectors){
+        for(i in 1:length(departuresOpenSkiesFlights)){
+            departureTime <- departuresOpenSkiesFlights[[i]]$departure_time
+            arrivalTime <- departuresOpenSkiesFlights[[i]]$arrival_time
+            stateVectors <- getAircraftStateVectorsSeries(departuresOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useTrino)
+            departuresOpenSkiesFlights[[i]]$state_vectors <- stateVectors
+        }
+    }
+    if(includeAirportsMetadata){
+        for(i in 1:length(departuresOpenSkiesFlights)){
+            originAirportICAO <- departuresOpenSkiesFlights[[i]]$origin_airport
+            destinationAirportICAO <- departuresOpenSkiesFlights[[i]]$destination_airport
+            if(!is.null(originAirportICAO)){
+                originAirport <- getAirportMetadata(originAirportICAO)
+                departuresOpenSkiesFlights[[i]]$origin_airport <- originAirport
+            }
+            if(!is.null(destinationAirportICAO)){
+                destinationAirport <- getAirportMetadata(destinationAirportICAO)
+                departuresOpenSkiesFlights[[i]]$destination_airport <- destinationAirport
+            }
+        }
+    }
+    return(departuresOpenSkiesFlights)
+}
+
+getAircraftFlightsSingleInterval <- function(aircraft, startTime, endTime, timeZone,
+                                             username, password, includeStateVectors, 
+                                             timeResolution, useTrino, 
+                                             includeAirportsMetadata,
+                                             timeOut, maxQueryAttempts) {
+    jsonResponse <- FALSE
+    attemptCount <- 0
+    while(!jsonResponse) {
+        attemptCount <- attemptCount + 1
+        response <- tryCatch({
+            GET(paste(openskyApiRootURL, "flights/aircraft", sep="" ),
+                query=list(icao24=aircraft,
+                           begin=stringToEpochs(startTime, timeZone),
+                           end=stringToEpochs(endTime, timeZone)),
+                timeout(timeOut),
+                if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+        },
+        error = function(e) e
+        )
+        if(inherits(response, "error")) {
+            message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+            return(NULL)
+        }
+        jsonResponse <- grepl("json", headers(response)$`content-type`)
+        if(attemptCount > maxQueryAttempts) {
+            message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+            return(NULL)
+        }
+    }
+    if(status_code(response) != 200) {
+        # message(strwrap("No flights found for the specified interval and 
+        #             aircraft", initial="", prefix="\n"))
+        return(NULL)
+    } 
+    aircraftFlightsList <- formatFlightsListResponse(content(response))
+    aircraftOpenSkiesFlights <- lapply(aircraftFlightsList, listToOpenSkiesFlight)
+    if(includeStateVectors)
+        for(i in 1:length(aircraftOpenSkiesFlights)){
+            departureTime <- aircraftOpenSkiesFlights[[i]]$departure_time
+            arrivalTime <- aircraftOpenSkiesFlights[[i]]$arrival_time
+            stateVectors <- getAircraftStateVectorsSeries(aircraft, departureTime, arrivalTime, timeZone, timeResolution, username, password, useTrino)
+            aircraftOpenSkiesFlights[[i]]$state_vectors <- stateVectors
+        }
+    if(includeAirportsMetadata){
+        for(i in 1:length(aircraftOpenSkiesFlights)){
+            originAirportICAO <- aircraftOpenSkiesFlights[[i]]$origin_airport
+            destinationAirportICAO <- aircraftOpenSkiesFlights[[i]]$destination_airport
+            if(!is.null(originAirportICAO)){
+                originAirport <- getAirportMetadata(originAirportICAO)
+                aircraftOpenSkiesFlights[[i]]$origin_airport <- originAirport
+            }
+            if(!is.null(destinationAirportICAO)){
+                destinationAirport <- getAirportMetadata(destinationAirportICAO)
+                aircraftOpenSkiesFlights[[i]]$destination_airport <- destinationAirport
+            }
+        }
+    }
+    return(aircraftOpenSkiesFlights)
+}
+
+getIntervalFlightsSingleInterval <- function(startTime, endTime, timeZone,
+                                             username, password, includeStateVectors, 
+                                             timeResolution, useTrino, 
+                                             includeAirportsMetadata,
+                                             timeOut, maxQueryAttempts) {
+    jsonResponse <- FALSE
+    attemptCount <- 0
+    while(!jsonResponse) {
+        attemptCount <- attemptCount + 1
+        response <- tryCatch({
+            GET(paste(openskyApiRootURL, "flights/all", sep="" ),
+                query=list(begin=stringToEpochs(startTime, timeZone),
+                           end=stringToEpochs(endTime, timeZone)),
+                timeout(timeOut),
+                if (!(is.null(username) | is.null(password))) {authenticate(username, password)})
+        },
+        error = function(e) e
+        )
+        if(inherits(response, "error")) {
+            message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+            return(NULL)
+        }
+        jsonResponse <- grepl("json", headers(response)$`content-type`)
+        if(attemptCount > maxQueryAttempts) {
+            message(strwrap("Resource not currently available. Please try again 
+                       later.", initial="", prefix="\n"))
+            return(NULL)
+        }
+    }
+    if(status_code(response) != 200) {
+        # message("No flights found for the specified interval")
+        return(NULL)
+    } 
+    intervalFlightsList <- formatFlightsListResponse(content(response))
+    intervalOpenSkiesFlights <- lapply(intervalFlightsList, listToOpenSkiesFlight)
+    if(includeStateVectors){
+        for(i in 1:length(intervalOpenSkiesFlights)){
+            departureTime <- intervalOpenSkiesFlights[[i]]$departure_time
+            arrivalTime <- intervalOpenSkiesFlights[[i]]$arrival_time
+            stateVectors <- getAircraftStateVectorsSeries(intervalOpenSkiesFlights[[i]]$ICAO24, departureTime, arrivalTime, timeZone, timeResolution, username, password, useTrino)
+            intervalOpenSkiesFlights[[i]]$state_vectors <- stateVectors
+        }
+    }
+    if(includeAirportsMetadata){
+        for(i in 1:length(intervalOpenSkiesFlights)){
+            originAirportICAO <- intervalOpenSkiesFlights[[i]]$origin_airport
+            destinationAirportICAO <- intervalOpenSkiesFlights[[i]]$destination_airport
+            if(!is.null(originAirportICAO)){
+                originAirport <- getAirportMetadata(originAirportICAO)
+                intervalOpenSkiesFlights[[i]]$origin_airport <- originAirport
+            }
+            if(!is.null(destinationAirportICAO)){
+                destinationAirport <- getAirportMetadata(destinationAirportICAO)
+                intervalOpenSkiesFlights[[i]]$destination_airport <- destinationAirport
+            }
+        }
+    }
+    return(intervalOpenSkiesFlights)
+}
