@@ -19,8 +19,8 @@ clusterRoutes(input, method="dbscan", eps=0.5, numberClusters=NULL, ...)
   }
   \item{method}{clustering method that will be applied to the positional features.
   Accepted methods are: dbscan, kmeans, hclust, fanny, clara, agnes}
-  \item{eps}{Size of the epsilon neighborhood to be passed to \code{\link{dbscan}.This argument is 
-  only used if the selected clustering method is dbscan.}.
+  \item{eps}{Size of the epsilon neighborhood to be passed to \code{\link[dbscan]{dbscan}}.This argument is 
+  only used if the selected clustering method is dbscan.
   }
   \item{numberClusters}{number of expected clusters. If NULL or a value lesser than 2 is passed,
   the number of clusters will be estimated. This argument is only used if the selected clustering
@@ -29,7 +29,7 @@ clusterRoutes(input, method="dbscan", eps=0.5, numberClusters=NULL, ...)
 }
 \value{
 An object with clustering results, containing at least a "cluster". For additional details, 
-see the documentation of \code{\link{cluster}}.
+see the documentation of the \code{cluster} package.
 }
 \examples{
 if(interactive()){

@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2024-04-03" />
+<meta name="date" content="2025-08-20" />
 
 <title>openSkies.knit</title>
 
@@ -52,7 +52,7 @@ h4 {font-size: 18px;}
 h5 {font-size: 16px;}
 h6 {font-size: 12px;}
 code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
-pre:not([class]) { background-color: white }</style>
+</style>
 <script>
 
 /**
@@ -239,6 +239,28 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
 
 <style type="text/css">body {
 margin: 0px auto;
@@ -508,6 +530,10 @@ code > span.paren { color: #000000;}
 padding-left: 65px;
 }
 
+.references {
+padding-right: 150px;
+}
+
 .margin-toggle {
 display: none;
 }
@@ -521,6 +547,8 @@ width: auto;
 p {
 padding-left: 0;
 padding-right: 0;
+}
+.references { padding-right: 0;
 }
 h1, h2, h3, h4, h5, h6 {
 width: 100%;
@@ -706,6 +734,7 @@ function toggle_visibility(id1) {
 <li><a href="#accessing-aircraft-state-vectors" id="toc-accessing-aircraft-state-vectors"><span class="toc-section-number">4</span> Accessing aircraft state vectors</a></li>
 <li><a href="#system-of-r6-classes-for-aviation-data" id="toc-system-of-r6-classes-for-aviation-data"><span class="toc-section-number">5</span> System of R6 classes for aviation data</a></li>
 <li><a href="#references" id="toc-references"><span class="toc-section-number">6</span> References</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
 </ul>
 </div>
 
@@ -752,7 +781,7 @@ Some examples are “EDDF” for Frankfurt International Airport (Germany), or
 “LEBL” for Barcelona Airport (Spain).</p>
 <p>For retrieval of flights by aicraft, it is necessary to provide the ICAO 24-bit
 address of the aircraft. This can be obtained from multiple sources, such as
-<a href="http://www.airframes.org/" class="uri">http://www.airframes.org/</a>. For example, 346190 corresponds to an ATR 72-600
+<a href="https://www.airframes.org/" class="uri">https://www.airframes.org/</a>. For example, 346190 corresponds to an ATR 72-600
 of Air Nostrum with registration EC-NCD.</p>
 <p>The function <b>getAirportArrivals()</b> lists all flights that arrived at a
 given airport.</p>
@@ -830,9 +859,15 @@ the manual of the package.</p>
 </div>
 <div id="references" class="section level1" number="6">
 <h1><span class="header-section-number">6</span> References</h1>
+<div id="refs">
+
+</div>
+</div>
+<div id="appendix-appendix" class="section level1 unnumbered">
+<h1>Appendix</h1>
 <p><a href="https://opensky-network.org/" class="uri">https://opensky-network.org/</a></p>
 <p><a href="https://www.world-airport-codes.com/" class="uri">https://www.world-airport-codes.com/</a></p>
-<p><a href="http://www.airframes.org/" class="uri">http://www.airframes.org/</a></p>
+<p><a href="https://www.airframes.org/" class="uri">https://www.airframes.org/</a></p>
 </div>
 
 
